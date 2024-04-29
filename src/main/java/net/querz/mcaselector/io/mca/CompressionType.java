@@ -7,6 +7,7 @@ public enum CompressionType {
 	ZLIB(2),
 	UNCOMPRESSED(3),
 	LZ4(4),
+	ZSTD(53),
 	NONE_EXT(-128), // indicates that the chunk data is oversized and saved in a c.x.z.mcc file
 	GZIP_EXT(-127),
 	ZLIB_EXT(-126),
