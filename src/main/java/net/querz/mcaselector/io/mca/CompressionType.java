@@ -12,7 +12,8 @@ public enum CompressionType {
 	GZIP_EXT(-127),
 	ZLIB_EXT(-126),
 	UNCOMPRESSED_EXT(-125),
-	LZ4_EXT(-124);
+	LZ4_EXT(-124),
+	ZSTD_EXT(-75);
 
 	private final byte type;
 

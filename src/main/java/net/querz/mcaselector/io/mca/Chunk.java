@@ -45,11 +45,12 @@ public abstract class Chunk {
 				case GZIP -> new DataInputStream(new GZIPInputStream(new ByteBufferBackedInputStream(buf)));
 				case ZLIB -> new DataInputStream(new InflaterInputStream(new ByteBufferBackedInputStream(buf)));
 				case LZ4 -> new DataInputStream(new LZ4BlockInputStream(new ByteBufferBackedInputStream(buf)));
-				case ZSTD -> new DataInputStream(new FastBufferedInputStream(new ZstdInputStream(ptr)));
+				case ZSTD -> new DataInputStream(new ZstdInputStream(new ByteBufferBackedInputStream(buf)));
 				case NONE, UNCOMPRESSED -> new DataInputStream(new ByteBufferBackedInputStream(buf));
 				case GZIP_EXT -> new DataInputStream(new GZIPInputStream(new FileInputStream(getMCCFile()), 4096 * length));
 				case ZLIB_EXT -> new DataInputStream(new InflaterInputStream(new FileInputStream(getMCCFile())));
 				case LZ4_EXT -> new DataInputStream(new LZ4BlockInputStream(new FileInputStream(getMCCFile())));
+				case ZSTD_EXT -> new DataInputStream(new ZstdInputStream(new FileInputStream(getMCCFile())));
 				case NONE_EXT, UNCOMPRESSED_EXT -> new DataInputStream(new BufferedInputStream(new FileInputStream(getMCCFile()), 4096 * length));
 			}) {
 
@@ -70,8 +71,8 @@ public abstract class Chunk {
 				case GZIP, GZIP_EXT -> new DataOutputStream(new BufferedOutputStream(new GZIPOutputStream(baos = new ExposedByteArrayOutputStream())));
 				case ZLIB, ZLIB_EXT -> new DataOutputStream(new BufferedOutputStream(new DeflaterOutputStream(baos = new ExposedByteArrayOutputStream())));
 				case LZ4, LZ4_EXT -> new DataOutputStream(new BufferedOutputStream(new LZ4BlockOutputStream(baos = new ExposedByteArrayOutputStream())));
-				case ZSTD -> new DataOutputStream(new FastBufferedOutputStream(new ZstdOutputStream(baos = new ExposedByteArrayOutputStream())));
-			case NONE, NONE_EXT, UNCOMPRESSED, UNCOMPRESSED_EXT -> new DataOutputStream(new BufferedOutputStream(baos = new ExposedByteArrayOutputStream()));
+				case ZSTD, ZSTD_EXT -> new DataOutputStream(new BufferedOutputStream(new ZstdOutputStream(baos = new ExposedByteArrayOutputStream())));
+				case NONE, NONE_EXT, UNCOMPRESSED, UNCOMPRESSED_EXT -> new DataOutputStream(new BufferedOutputStream(baos = new ExposedByteArrayOutputStream()));
 			}) {
 
 			new NBTWriter().write(nbtOut, data);
