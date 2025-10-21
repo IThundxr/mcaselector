@@ -29,6 +29,12 @@ public enum Translation {
 	MENU_SELECTION("menu.selection"),
 	MENU_TOOLS("menu.tools"),
 	MENU_ABOUT("menu.about"),
+	MENU_FILE_NEW("menu.file.new"),
+	MENU_FILE_OPEN("menu.file.open"),
+	MENU_FILE_OPEN_RECENT("menu.file.open_recent"),
+	MENU_FILE_OPEN_RECENT_CLEAR("menu.file.open_recent.clear"),
+	MENU_FILE_SAVE("menu.file.save"),
+	MENU_FILE_SAVE_AS("menu.file.save_as"),
 	MENU_FILE_OPEN_WORLD("menu.file.open_world"),
 	MENU_FILE_OPEN_DIMENSION("menu.file.open_dimension"),
 	MENU_FILE_OPEN_RECENT_WORLD("menu.file.open_recent_world"),
@@ -79,6 +85,7 @@ public enum Translation {
 	DIALOG_SETTINGS_RENDERING_SHADE_SHADE("dialog.settings.rendering.shade.shade"),
 	DIALOG_SETTINGS_RENDERING_SHADE("dialog.settings.rendering.shade"),
 	DIALOG_SETTINGS_RENDERING_SHADE_SHADE_WATER("dialog.settings.rendering.shade.shade_water"),
+	DIALOG_SETTINGS_RENDERING_SHADE_SHADE_ALTITUDE("dialog.settings.rendering.shade.shade_altitude"),
 	DIALOG_SETTINGS_RENDERING_BACKGROUND_SHOW_NONEXISTENT_REGIONS("dialog.settings.rendering.background.show_nonexistent_regions"),
 	DIALOG_SETTINGS_RENDERING_SMOOTH_SMOOTH_RENDERING("dialog.settings.rendering.smooth.smooth_rendering"),
 	DIALOG_SETTINGS_RENDERING_SMOOTH_SMOOTH_OVERLAYS("dialog.settings.rendering.smooth.smooth_overlays"),
@@ -147,6 +154,9 @@ public enum Translation {
 	DIALOG_EDIT_OVERLAYS_TITLE("dialog.edit_overlays.title"),
 	DIALOG_EDIT_OVERLAYS_OVERLAY_ACTIVE_TOOLTIP("dialog.edit_overlays.overlay_active.tooltip"),
 	DIALOG_EDIT_OVERLAYS_DELETE_TOOLTIP("dialog.edit_overlays.delete.tooltip"),
+	DIALOG_EDIT_OVERLAYS_TAB_PRESETS("dialog.edit_overlays.tab_presets"),
+	DIALOG_EDIT_OVERLAYS_TAB_SCRIPT("dialog.edit_overlays.tab_script"),
+	DIALOG_EDIT_OVERLAYS_CREATE_OVERLAY("dialog.edit_overlays.create_overlay"),
 	DIALOG_CHANGE_NBT_TITLE("dialog.change_nbt.title"),
 	DIALOG_CHANGE_NBT_CHANGE("dialog.change_nbt.change"),
 	DIALOG_CHANGE_NBT_CHANGE_TOOLTIP("dialog.change_nbt.change.tooltip"),
@@ -201,6 +211,10 @@ public enum Translation {
 	DIALOG_ERROR_COPIED_TO_CLIPBOARD("dialog.error.copied_to_clipboard"),
 	DIALOG_UNSAVED_SELECTION_TITLE("dialog.unsaved_selection.title"),
 	DIALOG_UNSAVED_SELECTION_HEADER("dialog.unsaved_selection.header"),
+	DIALOG_UNSAVED_SCRIPT_TITLE("dialog.unsaved_script.title"),
+	DIALOG_UNSAVED_SCRIPT_HEADER("dialog.unsaved_script.header"),
+	DIALOG_REQUEST_NUMBER_TITLE_ARRAY_LENGTH("dialog.request_number.title.array_length"),
+	DIALOG_REQUEST_NUMBER_TITLE_ENTER_NUMBER("dialog.request_number.title.enter_number"),
 	BUTTON_CANCEL("button.cancel"),
 	BUTTON_OK("button.ok");
 
@@ -219,7 +233,7 @@ public enum Translation {
 				if (matcher.matches()) {
 					String language = matcher.group("language");
 					String country = matcher.group("country");
-					availableLanguages.add(new Locale(language, country));
+					availableLanguages.add(Locale.of(language, country));
 				} else {
 					LOGGER.error("invalid language file: {}", langFile);
 				}

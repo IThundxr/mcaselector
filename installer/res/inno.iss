@@ -7,6 +7,7 @@ AppPublisher=${applicationAuthor}
 AppPublisherURL=${applicationUrl}
 AppSupportURL=${applicationUrl}
 AppUpdatesURL=${applicationUrl}
+AppCopyright=${applicationCopyright}
 DefaultDirName={autopf}\\${applicationName}
 DisableProgramGroupPage=yes
 LicenseFile=LICENSE
@@ -20,6 +21,7 @@ WizardStyle=modern
 WizardSmallImageFile=small.bmp
 WizardImageFile=large.bmp
 ExtraDiskSpaceRequired=223010816
+VersionInfoVersion=${applicationVersion}.0
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -45,6 +47,7 @@ Source: "lib\\*"; DestDir: "{app}\\lib"; Flags: ignoreversion
 
 [InstallDelete]
 Type: filesandordirs; Name: "{app}\\jre"
+Type: filesandordirs; Name: "{app}\\lib"
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}\\jre"

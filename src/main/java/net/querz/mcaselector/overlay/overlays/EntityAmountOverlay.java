@@ -1,25 +1,21 @@
 package net.querz.mcaselector.overlay.overlays;
 
 import net.querz.mcaselector.io.mca.ChunkData;
-import net.querz.mcaselector.overlay.AmountParser;
+import net.querz.mcaselector.overlay.AmountOverlay;
 import net.querz.mcaselector.overlay.OverlayType;
-import net.querz.mcaselector.version.EntityFilter;
-import net.querz.mcaselector.version.VersionController;
+import net.querz.mcaselector.version.ChunkFilter;
+import net.querz.mcaselector.version.VersionHandler;
 import net.querz.nbt.ListTag;
 
-public class EntityAmountOverlay extends AmountParser {
+public class EntityAmountOverlay extends AmountOverlay {
 
 	public EntityAmountOverlay() {
-		super(OverlayType.ENTITY_AMOUNT);
+		super(OverlayType.ENTITY_AMOUNT, 0, Integer.MAX_VALUE);
 	}
 
 	@Override
-	public int parseValue(ChunkData chunkData) {
-		if (chunkData.region() == null || chunkData.region().getData() == null) {
-			return 0;
-		}
-		EntityFilter entityFilter = VersionController.getEntityFilter(chunkData.region().getData().getIntOrDefault("DataVersion", 0));
-		ListTag entities = entityFilter.getEntities(chunkData);
+	public int parseValue(ChunkData data) {
+		ListTag entities = VersionHandler.getImpl(data, ChunkFilter.Entities.class).getEntities(data);
 		return entities == null ? 0 : entities.size();
 	}
 

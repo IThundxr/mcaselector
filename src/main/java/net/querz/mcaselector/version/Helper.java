@@ -1,11 +1,15 @@
 package net.querz.mcaselector.version;
 
-import net.querz.mcaselector.point.Point2i;
-import net.querz.mcaselector.point.Point3i;
+import net.querz.mcaselector.io.mca.ChunkData;
+import net.querz.mcaselector.util.point.Point2i;
+import net.querz.mcaselector.util.point.Point3i;
+import net.querz.mcaselector.util.range.Range;
 import net.querz.nbt.*;
 import java.util.Random;
 
 public final class Helper {
+
+	private static final Range maxRange = new Range(-127, 126);
 
 	private static final Random random = new Random();
 
@@ -92,6 +96,14 @@ public final class Helper {
 		return null;
 	}
 
+	public static int intFromCompound(Tag compound, String key, int def) {
+		IntTag tag = tagFromCompound(compound, key, null);
+		if (tag != null) {
+			return tag.asInt();
+		}
+		return def;
+	}
+
 	public static Long longFromCompound(Tag compound, String key) {
 		LongTag tag = tagFromCompound(compound, key, null);
 		if (tag != null) {
@@ -154,6 +166,21 @@ public final class Helper {
 			return tag.getValue();
 		}
 		return def;
+	}
+
+	public static void applyShortOffsetIfRootPresent(CompoundTag root, String xKey, String yKey, String zKey, Point3i offset) {
+		if (root != null) {
+			applyShortIfPresent(root, xKey, offset.getX());
+			applyShortIfPresent(root, yKey, offset.getY());
+			applyShortIfPresent(root, zKey, offset.getZ());
+		}
+	}
+
+	public static void applyShortIfPresent(CompoundTag root, String key, int offset) {
+		Short value;
+		if ((value = shortFromCompound(root, key)) != null) {
+			root.putShort(key, (short) (value + offset));
+		}
 	}
 
 	public static void applyIntOffsetIfRootPresent(CompoundTag root, String xKey, String yKey, String zKey, Point3i offset) {
@@ -243,6 +270,32 @@ public final class Helper {
 		}
 	}
 
+	public static Range findSectionRange(CompoundTag root, ListTag sections) {
+		if (sections == null) {
+			return null;
+		}
+		int max = Integer.MIN_VALUE;
+		int min = Integer.MAX_VALUE;
+		int current;
+		for (CompoundTag section : sections.iterateType(CompoundTag.class)) {
+			// ignore empty section
+			if (section.size() == 1 || !section.containsKey("Y")) {
+				continue;
+			}
+			current = section.getInt("Y");
+			if (current > max) {
+				max = current;
+			}
+			if (current < min) {
+				min = current;
+			}
+		}
+		if (root.containsNumber("yPos")) {
+			min = root.getInt("yPos");
+		}
+		return new Range(min, max).limit(maxRange);
+	}
+
 	public static int findHighestSection(ListTag sections, int lowest) {
 		int max = lowest;
 		int current;
@@ -253,4 +306,63 @@ public final class Helper {
 		}
 		return max;
 	}
+
+	public static int getDataVersion(CompoundTag root) {
+		if (root == null) {
+			return 100;
+		}
+		if (!root.containsKey("DataVersion") && root.contains("Level", Tag.Type.COMPOUND)) {
+			Integer d = intFromCompound(root.getCompound("Level"), "DataVersion");
+			return d == null ? 100 : d;
+		}
+		return root.getIntOrDefault("DataVersion", 100);
+	}
+
+	public static IntTag getDataVersionTag(CompoundTag root) {
+		if (root == null) {
+			return null;
+		}
+		Tag d;
+		if (!root.containsKey("DataVersion") && root.contains("Level", Tag.Type.COMPOUND)) {
+			d = tagFromCompound(root.getCompound("Level"), "DataVersion");
+		} else {
+			d = root.get("DataVersion");
+		}
+		return d == null || d.getType() != Tag.Type.INT ? null : (IntTag) d;
+	}
+
+	public static void setDataVersion(CompoundTag root, int dataVersion) {
+		if (root == null) {
+			return;
+		}
+		// DataVersion was added on root level in 15w33a, before it was inside the Level tag
+		if (dataVersion < 111) {
+			if (root.contains("Level", Tag.Type.COMPOUND)) {
+				root.getCompound("Level").putInt("DataVersion", dataVersion);
+			}
+		}
+		root.putInt("DataVersion", dataVersion);
+	}
+
+	public static CompoundTag getRegion(ChunkData data) {
+		if (data == null || data.region() == null) {
+			return null;
+		}
+		return data.region().getData();
+	}
+
+	public static CompoundTag getPOI(ChunkData data) {
+		if (data == null || data.poi() == null) {
+			return null;
+		}
+		return data.poi().getData();
+	}
+
+	public static CompoundTag getEntities(ChunkData data) {
+		if (data == null || data.entities() == null) {
+			return null;
+		}
+		return data.entities().getData();
+	}
+
 }

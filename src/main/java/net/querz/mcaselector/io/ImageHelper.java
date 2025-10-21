@@ -4,12 +4,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
-import net.querz.mcaselector.progress.Progress;
-import net.querz.mcaselector.progress.Timer;
+import net.querz.mcaselector.util.progress.Progress;
+import net.querz.mcaselector.util.progress.Timer;
 import net.querz.mcaselector.tile.Tile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import javax.imageio.ImageIO;
 import java.awt.Color;
 import java.awt.geom.AffineTransform;
@@ -52,7 +51,7 @@ public final class ImageHelper {
 	}
 
 	public static Image renderGradient(int width, float min, float max, float low, float high, boolean inverted) {
-		WritableImage image = new WritableImage(width, 50);
+		WritableImage image = new WritableImage(width, 1);
 		PixelWriter pixelWriter = image.getPixelWriter();
 		for (int i = 0; i < width; i++) {
 			float hue = (max - min) * ((float) i / width) + min;
@@ -66,9 +65,7 @@ public final class ImageHelper {
 				hue = max - hue + min;
 			}
 
-			for (int j = 0; j < 50; j++) {
-				pixelWriter.setArgb(i, j, Color.HSBtoRGB(hue, saturation, brightness));
-			}
+			pixelWriter.setArgb(i, 0, Color.HSBtoRGB(hue, saturation, brightness));
 		}
 		return image;
 	}

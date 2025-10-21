@@ -15,11 +15,11 @@ public class TimestampOverlay extends Overlay {
 	}
 
 	@Override
-	public int parseValue(ChunkData chunkData) {
-		if (chunkData.region() == null) {
+	public int parseValue(ChunkData data) {
+		if (data.region() == null) {
 			return 0;
 		}
-		return chunkData.region().getTimestamp();
+		return data.region().getTimestamp();
 	}
 
 	@Override
@@ -27,10 +27,12 @@ public class TimestampOverlay extends Overlay {
 		return "Timestamp";
 	}
 
+	@Override
 	public String minString() {
 		return minTimestamp == null ? super.minString() : minTimestamp;
 	}
 
+	@Override
 	public String maxString() {
 		return minTimestamp == null ? super.maxString() : maxTimestamp;
 	}

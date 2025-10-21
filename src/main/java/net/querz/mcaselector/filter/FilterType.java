@@ -1,7 +1,6 @@
 package net.querz.mcaselector.filter;
 
 import net.querz.mcaselector.filter.filters.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -16,6 +15,7 @@ public enum FilterType {
 	Y_POS("yPos", YPosFilter::new, Format.NUMBER),
 	Z_POS("zPos", ZPosFilter::new, Format.NUMBER),
 	TIMESTAMP("Timestamp", TimestampFilter::new, Format.NUMBER),
+	COMPRESSION("Compression", CompressionFilter::new, Format.TEXT),
 	LAST_UPDATE("LastUpdate", LastUpdateFilter::new, Format.NUMBER),
 	PALETTE("Palette", PaletteFilter::new, Format.TEXT),
 	BIOME("Biome", BiomeFilter::new, Format.TEXT),
@@ -37,34 +37,34 @@ public enum FilterType {
 	private final String string;
 	private final Supplier<? extends Filter<?>> creator;
 	private final Format format;
-	private final boolean queue;
+	private final boolean query;
 
-	private static FilterType[] queuables;
+	private static FilterType[] queryable;
 
 	static {
-		List<FilterType> queuable = new ArrayList<>(8);
+		List<FilterType> queryable = new ArrayList<>(8);
 		for (FilterType filterType : values()) {
-			if (filterType.queue) {
-				queuable.add(filterType);
+			if (filterType.query) {
+				queryable.add(filterType);
 			}
 		}
-		FilterType.queuables = queuable.toArray(new FilterType[0]);
+		FilterType.queryable = queryable.toArray(new FilterType[0]);
 	}
 
 	FilterType(String string, Supplier<? extends Filter<?>> creator, Format format) {
 		this(string, creator, format, true);
 	}
 
-	FilterType(String string, Supplier<? extends Filter<?>> creator, Format format, boolean queue) {
+	FilterType(String string, Supplier<? extends Filter<?>> creator, Format format, boolean query) {
 		this.string = string;
 		this.creator = creator;
 		this.format = format;
-		this.queue = queue;
+		this.query = query;
 	}
 
 
-	public static FilterType[] queuables() {
-		return queuables;
+	public static FilterType[] queryable() {
+		return queryable;
 	}
 
 	public Format getFormat() {

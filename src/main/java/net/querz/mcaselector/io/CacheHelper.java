@@ -3,12 +3,12 @@ package net.querz.mcaselector.io;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.querz.mcaselector.config.ConfigProvider;
 import net.querz.mcaselector.io.job.RegionImageGenerator;
-import net.querz.mcaselector.point.Point2i;
+import net.querz.mcaselector.util.point.Point2i;
 import net.querz.mcaselector.selection.ChunkSet;
 import net.querz.mcaselector.selection.Selection;
 import net.querz.mcaselector.tile.Tile;
 import net.querz.mcaselector.tile.TileMap;
-import net.querz.mcaselector.progress.Progress;
+import net.querz.mcaselector.util.progress.Progress;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import java.io.BufferedReader;
@@ -53,7 +53,7 @@ public final class CacheHelper {
 		updateVersionFile();
 		ConfigProvider.WORLD.save();
 		tileMap.clear();
-		tileMap.draw();
+		tileMap.update();
 	}
 
 	// asynchronously cancels all jobs and marks all Tiles as "not loaded"
@@ -68,7 +68,7 @@ public final class CacheHelper {
 			ConfigProvider.WORLD.save();
 
 			tileMap.markAllTilesAsObsolete();
-			tileMap.draw();
+			tileMap.update();
 			callback.run();
 		});
 		clear.start();
@@ -88,7 +88,7 @@ public final class CacheHelper {
 			}
 		}
 		RegionImageGenerator.invalidateCachedMCAFiles();
-		tileMap.draw();
+		tileMap.update();
 	}
 
 	public static void clearSelectionCache(TileMap tileMap) {
@@ -108,7 +108,7 @@ public final class CacheHelper {
 			tileMap.getOverlayPool().discardData(region);
 		}
 		RegionImageGenerator.invalidateCachedMCAFiles();
-		tileMap.draw();
+		tileMap.update();
 	}
 
 	public static void validateCacheVersion(TileMap tileMap) {
@@ -127,7 +127,7 @@ public final class CacheHelper {
 
 		File cacheVersionFile = new File(ConfigProvider.WORLD.getCacheDir(), "version");
 		String version = null;
-		if(cacheVersionFile.exists()) {
+		if (cacheVersionFile.exists()) {
 			version = readVersionFromFile(cacheVersionFile);
 		} else {
 			LOGGER.warn("no cache found for this world");
